@@ -10,29 +10,29 @@ func unexpectedValueError(v interface{}) error {
 }
 
 func toInt(v interface{}) (int, error) {
-	switch vv := v.(type) {
-	case string:
-		i, err := strconv.Atoi(vv)
-		if err != nil {
-			return 0, fmt.Errorf("can't convert string to int: %s", v)
-		}
-		return i, nil
+	vv, ok := v.(string)
+	if !ok {
+		return 0, unexpectedValueError(v)
 	}
-	return 0, unexpectedValueError(v)
+	i, err := strconv.Atoi(vv)
+	if err != nil {
+		return 0, fmt.Errorf("can't convert string to int: %s", v)
+	}
+	return i, nil
 }
 
 func toString(v interface{}) (string, error) {
-	switch vv := v.(type) {
-	case string:
-		return vv, nil
+	vv, ok := v.(string)
+	if !ok {
+		return "", unexpectedValueError(v)
 	}
-	return "", unexpectedValueError(v)
+	return vv, nil
 }
 
 func toSlice(v interface{}) ([]interface{}, error) {
-	switch vv := v.(type) {
-	case []interface{}:
-		return vv, nil
+	vv, ok := v.([]interface{})
+	if !ok {
+		return nil, unexpectedValueError(v)
 	}
-	return nil, unexpectedValueError(v)
+	return vv, nil
 }
